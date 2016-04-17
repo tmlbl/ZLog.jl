@@ -5,7 +5,6 @@ module ZLog
 function __init__()
   path = joinpath(Pkg.dir("ZLog"), "deps/lib")
   push!(Libdl.DL_LOAD_PATH, path)
-  ENV["LD_LIBRARY_PATH"] = path
 end
 
 const libzlog = "libzlog"
