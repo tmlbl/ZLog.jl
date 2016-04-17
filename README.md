@@ -31,8 +31,8 @@ julia> info("Some data"; key="value")
 2016-04-17 14:07:36 INFO   Some data [key=value]
 ```
 
-The logging functions use the category "default" by default. If you using your
-own config and want to use the convenience functions, be sure to define the
+The logging functions use the category "default" by default. If you are using
+your own config and want to use the convenience functions, be sure to define the
 "default" category. Other categories can be used like so:
 
 ```julia
