@@ -3,7 +3,9 @@ __precompile__(true)
 module ZLog
 
 function __init__()
-  push!(Libdl.DL_LOAD_PATH, joinpath(Pkg.dir("ZLog"), "deps/lib"))
+  path = joinpath(Pkg.dir("ZLog"), "deps/lib")
+  push!(Libdl.DL_LOAD_PATH, path)
+  ENV["LD_LIBRARY_PATH"] = path
 end
 
 const libzlog = "libzlog"
