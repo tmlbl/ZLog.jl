@@ -1,0 +1,15 @@
+language: julia
+os:
+    - linux
+    - osx
+julia:
+    - 0.4
+    - nightly
+notifications:
+    email: false
+script:
+    - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
+    - julia -e 'Pkg.clone(pwd()); Pkg.build("ZLog")'
+    - julia -e 'Pkg.test("ZLog", coverage=true)'
+after_success:
+    - julia -e 'cd(Pkg.dir("ZLog")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
