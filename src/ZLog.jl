@@ -2,10 +2,18 @@ __precompile__(true)
 
 module ZLog
 
-libzlog = joinpath(Pkg.dir("ZLog"), "deps/zlog-latest-stable/src/libzlog.so")
+macro lib(name, path)
+  pathstr = eval(path)
+  quote
+    const $(esc(name)) = $pathstr
+  end
+end
+
+@lib libzlog joinpath(Pkg.dir("ZLog"), "deps/zlog-latest-stable/src/libzlog.$(Libdl.dlext)")
+@lib libzlogjl joinpath(Pkg.dir("ZLog"), "deps/libzlogjl.$(Libdl.dlext)")
 
 function init(conf::AbstractString)
-  rc = ccall((:zlog_init, "libzlog"), Cint,
+  rc = ccall((:zlog_init, libzlog), Cint,
       (Cstring,), conf)
   if rc == C_NULL
     error("There was an error.")
@@ -20,7 +28,7 @@ type Category
 end
 
 function Category(name::AbstractString)
-  rc = ccall((:zlog_get_category, "libzlog"), Ptr{Void},
+  rc = ccall((:zlog_get_category, libzlog), Ptr{Void},
       (Cstring,), name)
   if rc == C_NULL
     error("Failed to get category $name")
@@ -32,7 +40,7 @@ import Base.info,
        Base.warn
 
 function info(cat::Category, msg::AbstractString)
-  ccall((:log_info, "libzlogjl"), Ptr{Void},
+  ccall((:log_info, libzlogjl), Ptr{Void},
       (Ptr{Void}, Cstring),
       cat.__wrap, msg)
   return nothing
@@ -41,7 +49,7 @@ end
 info(msg::AbstractString) = info(Category("default"), msg)
 
 function warn(cat::Category, msg::AbstractString)
-  ccall((:log_warn, "libzlogjl"), Ptr{Void},
+  ccall((:log_warn, libzlogjl), Ptr{Void},
       (Ptr{Void}, Cstring),
       cat.__wrap, msg)
   return nothing
