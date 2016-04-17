@@ -57,6 +57,15 @@ end
 
 warn(msg::AbstractString) = warn(Category("default"), msg)
 
-export info, warn
+function debug(cat::Category, msg::AbstractString)
+  ccall((:log_debug, libzlogjl), Ptr{Void},
+      (Ptr{Void}, Cstring),
+      cat.__wrap, msg)
+  return nothing
+end
+
+debug(msg::AbstractString) = debug(Category("default"), msg)
+
+export info, warn, debug
 
 end # module

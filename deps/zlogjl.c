@@ -11,3 +11,8 @@ void log_warn (zlog_category_t *cat, char *msg)
 {
   zlog_warn(cat, msg);
 }
+
+void log_debug (zlog_category_t *cat, char *msg)
+{
+  zlog_debug(cat, msg);
+}
