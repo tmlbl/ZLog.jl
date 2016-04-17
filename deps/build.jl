@@ -1,0 +1,6 @@
+run(`wget https://github.com/HardySimpson/zlog/archive/latest-stable.tar.gz`)
+run(`tar -xf latest-stable.tar.gz`)
+cd("zlog-latest-stable")
+run(`make`)
+cd("..")
+rm("latest-stable.tar.gz")
