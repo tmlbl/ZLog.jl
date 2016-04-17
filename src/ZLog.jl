@@ -34,36 +34,31 @@ function Category(name::AbstractString)
   Category(rc)
 end
 
+function argfmt(args::AbstractArray)
+  "[$(join(map(a -> "$(a[1])=$(a[2])", args), ' '))]"
+end
+
 import Base.info,
        Base.warn
 
-function info(cat::Category, msg::AbstractString)
-  ccall((:log_info, libzlogjl), Ptr{Void},
-      (Ptr{Void}, Cstring),
-      cat.__wrap, msg)
-  return nothing
+macro logfunc(name)
+  cfunc = "log_$name"
+  quote
+    function $(esc(name))(cat::Category, msg::AbstractString; kwargs...)
+      msg = "$msg $(length(kwargs) > 0 ? argfmt(kwargs) : "")"
+      ccall(($cfunc, libzlogjl), Ptr{Void},
+          (Ptr{Void}, Cstring),
+          cat.__wrap, msg)
+      return nothing
+    end
+    $(esc(name))(msg; args...) = $(esc(name))(Category("default"), msg; args...)
+    export $(esc(name))
+  end
 end
 
-info(msg::AbstractString) = info(Category("default"), msg)
-
-function warn(cat::Category, msg::AbstractString)
-  ccall((:log_warn, libzlogjl), Ptr{Void},
-      (Ptr{Void}, Cstring),
-      cat.__wrap, msg)
-  return nothing
-end
-
-warn(msg::AbstractString) = warn(Category("default"), msg)
-
-function debug(cat::Category, msg::AbstractString)
-  ccall((:log_debug, libzlogjl), Ptr{Void},
-      (Ptr{Void}, Cstring),
-      cat.__wrap, msg)
-  return nothing
-end
-
-debug(msg::AbstractString) = debug(Category("default"), msg)
-
-export info, warn, debug
+@logfunc info
+@logfunc warn
+@logfunc debug
+@logfunc err
 
 end # module

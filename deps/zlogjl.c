@@ -16,3 +16,8 @@ void log_debug (zlog_category_t *cat, char *msg)
 {
   zlog_debug(cat, msg);
 }
+
+void log_err (zlog_category_t *cat, char *msg)
+{
+  zlog_error(cat, msg);
+}
