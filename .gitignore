@@ -1,4 +1,6 @@
 deps/zlog-latest-stable
+deps/include
+deps/lib
 *.o
 *.a
 *.so

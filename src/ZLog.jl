@@ -2,16 +2,12 @@ __precompile__(true)
 
 module ZLog
 
-macro lib(name, path)
-  pathstr = eval(path)
-  quote
-    Libdl.dlopen($pathstr)
-    const $(esc(name)) = $pathstr
-  end
+function __init__()
+  push!(Libdl.DL_LOAD_PATH, joinpath(Pkg.dir("ZLog"), "deps/lib"))
 end
 
-@lib libzlog joinpath(Pkg.dir("ZLog"), "deps/zlog-latest-stable/src/libzlog.$(Libdl.dlext)")
-@lib libzlogjl joinpath(Pkg.dir("ZLog"), "deps/libzlogjl.$(Libdl.dlext)")
+const libzlog = "libzlog"
+const libzlogjl = "libzlogjl"
 
 function init(conf::AbstractString)
   rc = ccall((:zlog_init, libzlog), Cint,
