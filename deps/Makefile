@@ -22,8 +22,8 @@ zlog-latest-stable/src/libzlog.$(DLL): zlog-latest-stable
 
 libzlogjl.$(DLL): zlog-latest-stable/src/libzlog.$(DLL)
 	cc -c -fpic -I$(INC_PFX) -Wno-format-security zlogjl.c
-	cc -dynamiclib -Wno-format-security -o libzlogjl.$(DLL) \
-		zlogjl.o -L$(LIB_PFX) -Xlinker -rpath -Xlinker  `pwd` -lzlog $(LINK_OPT) -lpthread
+	cc -shared -Wno-format-security -o libzlogjl.$(DLL) \
+		zlogjl.o -L$(LIB_PFX) -lzlog $(LINK_OPT) -lpthread
 	ln -sf `pwd`/libzlogjl.$(DLL) `pwd`/lib/libzlogjl.$(DLL)
 ifeq ($(UNAME_S),Darwin)
 	install_name_tool -change libzlog...dylib $(DEPS_DIR)/lib/libzlog...dylib libzlogjl.dylib
