@@ -5,6 +5,7 @@ module ZLog
 macro lib(name, path)
   pathstr = eval(path)
   quote
+    Libdl.dlopen(pathstr)
     const $(esc(name)) = $pathstr
   end
 end
