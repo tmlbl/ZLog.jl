@@ -28,10 +28,27 @@ function Category(name::AbstractString)
   Category(rc)
 end
 
+import Base.info,
+       Base.warn
+
 function info(cat::Category, msg::AbstractString)
   ccall((:log_info, "libzlogjl"), Ptr{Void},
       (Ptr{Void}, Cstring),
       cat.__wrap, msg)
+  return nothing
 end
+
+info(msg::AbstractString) = info(Category("default"), msg)
+
+function warn(cat::Category, msg::AbstractString)
+  ccall((:log_warn, "libzlogjl"), Ptr{Void},
+      (Ptr{Void}, Cstring),
+      cat.__wrap, msg)
+  return nothing
+end
+
+warn(msg::AbstractString) = warn(Category("default"), msg)
+
+export info, warn
 
 end # module

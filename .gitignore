@@ -2,3 +2,4 @@ deps/zlog-latest-stable
 *.o
 *.a
 *.so
+*.tar.gz
